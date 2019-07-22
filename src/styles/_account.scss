@@ -1,0 +1,30 @@
+.account-wrapper {
+
+  .account-name {
+    font: {
+      size: 2rem;
+      weight: 700;
+    }
+  }
+
+  label {
+    font: {
+      size: 1.3rem;
+      weight: 600;
+    }
+  }
+
+  small {
+    margin-bottom: 10px;
+  }
+
+  .btn-coming-soon {
+    color: $white;
+    span {
+      padding: 0px 5px;
+      font: {
+        size: 0.7rem;
+      }
+    }
+  }
+}

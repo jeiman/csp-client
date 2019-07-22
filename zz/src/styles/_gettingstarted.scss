@@ -1,0 +1,26 @@
+.getting-started-wrapper {
+  text-align: center;
+
+  .gs-header {
+    font: {
+      weight: 700;
+    }
+    margin: {
+      top: 30px;
+      bottom: 20px;
+      left: 0px;
+      right: 0px;
+    }
+  }
+
+  button, a {
+    width: 100%;
+    max-width: 430px;
+    margin: 20px 0;
+    font: {
+      size: 1.2rem;
+    }
+    // word-wrap: break-word;
+    // padding: .375rem 1.2rem;
+  }
+}

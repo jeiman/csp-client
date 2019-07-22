@@ -1,0 +1,63 @@
+{
+  "name": "csp-portal",
+  "description": "A portal for Cloud Service Provider",
+  "author": "Jeiman Jeya",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve --open --host dev.csp.com --port 8081",
+    "build": "vue-cli-service build",
+    "build-staging": "vue-cli-service build --mode staging",
+    "lint": "vue-cli-service lint",
+    "test:unit": "vue-cli-service test:unit"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bootstrap": "^4.3.1",
+    "js-cookie": "^2.2.0",
+    "jwt-decode": "^2.2.0",
+    "register-service-worker": "^1.0.0",
+    "vue": "^2.5.16",
+    "vue-infinite-loading": "^2.3.1",
+    "vue-notification": "^1.3.16",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.0.1",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.7.0",
+    "@vue/cli-plugin-eslint": "^3.7.0",
+    "@vue/cli-plugin-pwa": "^3.7.0",
+    "@vue/cli-plugin-unit-mocha": "^3.7.0",
+    "@vue/cli-service": "^3.7.0",
+    "@vue/eslint-config-standard": "^4.0.0",
+    "@vue/test-utils": "^1.0.0-beta.16",
+    "chai": "^4.1.2",
+    "gravatar": "^1.6.0",
+    "lint-staged": "^6.0.0",
+    "mobile-detect": "^1.4.2",
+    "node-sass": "^4.9.4",
+    "sass-loader": "^7.0.1",
+    "superagent": "^3.8.3",
+    "vue-multiselect": "^2.1.0",
+    "vue-template-compiler": "^2.5.16"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ],
+  "gitHooks": {
+    "pre-commit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "vue-cli-service lint",
+      "git add"
+    ],
+    "*.vue": [
+      "vue-cli-service lint",
+      "git add"
+    ]
+  }
+}

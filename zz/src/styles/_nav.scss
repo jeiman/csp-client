@@ -1,0 +1,152 @@
+.icons {
+  font-size: 1.5rem;
+}
+
+.nav-link, .navbar-text {
+  color: $black !important;
+  // color: rgba(255, 255, 255, .9) !important;
+
+  &:hover {
+    color: $black !important;
+  }
+}
+
+.navbar-text {
+  a {
+    color: $black;
+
+    &:hover {
+      color: $black;
+    }
+  }
+}
+
+.the-nav {
+  input {
+    border: 0;
+    font: {
+      // family: $catamaran;
+      weight: 600;
+    }
+
+    &::placeholder {
+      font: {
+        weight: 300;
+      }
+    }
+  }
+
+  .form-control, .btn-outline-light {
+    &:focus {
+      box-shadow: none;
+    }
+  }
+  // .navbar-nav {
+  //   text-transform: uppercase;
+  // }
+}
+
+.dropdown-item {
+  &:hover {
+    color: $white !important;
+    background-color: $devly-color;
+  }
+}
+
+// .dropdown-menu {
+//   left: -120px;
+//   right: 22px;
+// }
+
+.navbar-brand {
+  padding: 0;
+  margin: 0;
+  margin-right: 10px;
+}
+
+.input-group-nav {
+  width: 54%;
+}
+
+.register {
+  background: $white;
+  color: $devly-color !important;
+  border-radius: 3px;
+  margin-left: 10px;
+
+  &:hover {
+    color: $white !important;
+    background: darken($color: $white, $amount: 40);
+  }
+
+  @include MQ(M) {
+    background: none;
+    color: $white !important;
+    margin-left: 0px;
+
+    &:hover {
+      color: $black !important;
+      background: none;
+    }
+  }
+}
+
+.mobile-navs {
+
+  .navbar {
+    padding-bottom: 0rem;
+  }
+
+  .row {
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+  
+  color: $white;
+  // padding: 5px;
+  text-align: center;
+
+  div {
+    margin-top: 7px;
+
+    a, p {
+      font-size: 0.9rem;
+      color: $white;
+      font-family: $catamaran;
+    }
+  }
+}
+
+.navbar-img {
+  position: relative;
+  top: -3px;
+}
+
+
+.login-nav {
+  .profile-name {
+    font: {
+      weight: 600;
+    }
+  }
+
+  .dropdown-login {
+    left: -138px;
+  }
+
+  .dropdown-item {
+
+    &:first-child {
+
+      &:hover {
+        color: $text-muted !important;
+        background: inherit;
+      }
+    }
+  }
+
+  img {
+    margin-right: 5px;
+    border-radius: 1px;
+  }
+}
