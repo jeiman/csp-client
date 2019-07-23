@@ -4,6 +4,7 @@ import Router from 'vue-router'
 // Import the views here
 import Root from './views/Root'
 import SearchResults from './views/SearchResults'
+import ServiceDetail from './views/ServiceDetail'
 
 Vue.use(Router)
 
@@ -23,6 +24,14 @@ export default new Router({
       component: SearchResults,
       meta: {
         title: 'Search Results'
+      }
+    },
+    {
+      name: 'serviceDetail',
+      path: '/service/:id',
+      component: ServiceDetail,
+      meta: {
+        title: 'Service Detail Page'
       }
     }
   ],
