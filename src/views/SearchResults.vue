@@ -32,7 +32,7 @@
     </v-flex>
 
     <v-flex xs9>
-      <v-data-iterator
+      <!-- <v-data-iterator
         :items="initialSolrResults.response.docs"
         :rows-per-page-items="rowsPerPageItems"
         :pagination.sync="pagination"
@@ -42,8 +42,8 @@
         wrap
       >
         <template v-slot:item="props">
-          <!-- <v-container grid-list-lg fluid> -->
-            <!-- <v-layout row wrap> -->
+          <v-container grid-list-lg fluid>
+            <v-layout row wrap>
               <v-flex xs4>
                 <v-card style="margin-bottom: 20px;">
                   <v-img
@@ -83,54 +83,13 @@
                   </v-slide-y-transition>
                 </v-card>
               </v-flex>
-            <!-- </v-layout>
-          </v-container> -->
 
-          <!-- <v-flex
-            xs12
-            sm6
-            md4
-            lg3
-          >
-            <v-card>
-              <v-card-title><h4>{{ props.item.service_full_name }}</h4></v-card-title>
-              <v-divider></v-divider>
-              <v-list dense>
-                <v-list-tile>
-                  <v-list-tile-content>Calories:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.calories }}</v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>Fat:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.fat }}</v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>Carbs:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.carbs }}</v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>Protein:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.protein }}</v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>Sodium:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.sodium }}</v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>Calcium:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.calcium }}</v-list-tile-content>
-                </v-list-tile>
-                <v-list-tile>
-                  <v-list-tile-content>Iron:</v-list-tile-content>
-                  <v-list-tile-content class="align-end">{{ props.item.iron }}</v-list-tile-content>
-                </v-list-tile>
-              </v-list>
-            </v-card>
-          </v-flex> -->
-
+            </v-layout>
+          </v-container>
         </template>
-      </v-data-iterator>
-      <!-- <v-container grid-list-lg fluid>
+      </v-data-iterator> -->
+
+            <v-container grid-list-lg fluid>
         <v-layout row wrap>
           <v-flex v-for="(product, index) in initialSolrResults.response.docs" :key="index"  xs4>
             <v-card style="margin-bottom: 20px;">
@@ -173,17 +132,15 @@
           </v-flex>
         </v-layout>
       </v-container>
-
+      
       <div class="text-xs-center">
         <v-pagination
           v-model="pagination.page"
           :length="pages"
-          :value="`${pagination.page}`"
+          @input="updatePagination"
         ></v-pagination>
-      </div> -->
-
+      </div>
     </v-flex>
-
   </v-layout>
 </v-container>
 </template>
@@ -196,10 +153,12 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      page: 0,
+      // page: 0,
+      totalPages: 0,
       rowsPerPageItems: [4, 8, 12],
       pagination: {
-        rowsPerPage: 20
+        // page: 0,
+        rowsPerPage: 10
       },
       da: [
         {
@@ -225,8 +184,6 @@ export default {
       ],
       initialSolrResults: {},
       category: {},
-      // newPayload: {},
-      // facetCounts: 0,
       loadServices: false,
       showExtraContent: false,
       checkbox: true,
@@ -243,7 +200,7 @@ export default {
 
   computed: {
     pages () {
-      return this.pagination.rowsPerPage ? Math.ceil(this.initialSolrResults.response.docs.length / this.pagination.rowsPerPage) : 0
+      return this.pagination.rowsPerPage ? Math.ceil(this.initialSolrResults.response.numFound / this.pagination.rowsPerPage) : 0
     }
   },
 
@@ -270,6 +227,8 @@ export default {
           // }
 
           this.initialSolrResults = payload
+          // this.pagination.page = pagination.page
+          this.totalPages = payload.response.numFound / 10
           console.log('new paginations > ', this.initialSolrResults)
         })
         .catch((error) => {
