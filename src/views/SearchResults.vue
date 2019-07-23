@@ -207,25 +207,13 @@ export default {
   methods: {
     updatePagination (pagination) {
       console.log('update:pagination', pagination)
-      // if (pagination.page === 2) {
-      //   this.show = true
-      // }
       axios({
         method: 'get',
-        url: `http://dev.csp.com:3000/solr/query?page=${pagination.page}`,
-        // data: {page: pag}
+        url: `http://dev.csp.com:3000/solr/query?page=${pagination}`,
         withCredentials: true
       })
         .then((response) => {
           const payload = response.data
-          // for (const doc in payload.response.docs) {
-          //   for (const cat in payload.facet_counts.facet_fields.category) {
-          //     if (cat === payload.response.docs[doc]['category']) {
-          //       payload.response.docs[doc]['facetCount'] = payload.facet_counts.facet_fields.category[cat]
-          //     }
-          //   }
-          // }
-
           this.initialSolrResults = payload
           // this.pagination.page = pagination.page
           this.totalPages = payload.response.numFound / 10
