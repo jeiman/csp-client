@@ -7,36 +7,21 @@
           <v-expansion-panel
             v-model="panel"
             expand
+            v-if="initialSolrResults.facet_counts"
           >
-            <!-- <v-expansion-panel-content v-for="(services, i) in cloudcomputing" :key="i">
+
+            <v-expansion-panel-content v-for="(cat, i) in initialSolrResults.facet_counts.facet_fields.category" :key="`${i}`">
               <template v-slot:header>
-                <div>{{services.name}} (2)</div>
+                <div>{{`${i} (${cat})`}}</div>
               </template>
               <v-card>
                 <v-card-text class="lighten-3">
-                  <v-checkbox
-                    v-for="(products, i) in services.products" :key="i"
-                    v-model="checkbox"
-                    :label="`${products.name}`"
-                    color="purple"
-                  ></v-checkbox>
-                </v-card-text>
-              </v-card>
-            </v-expansion-panel-content> -->
-
-            <v-expansion-panel-content v-for="(cat, i) in solr.facet_counts.facet_fields.category" :key="`${Math.floor(Math.random() * 20)}-${i}`">
-              <template v-slot:header>
-                <div @click="fetchCategoriesFromSolr(i)">{{`${i} (${cat})`}}</div>
-              </template>
-              <!-- <p>dsada</p> -->
-              <v-card>
-                <v-card-text class="lighten-3" v-if="loadServices">
-                  <v-checkbox
+                  <!-- <v-checkbox
                     v-for="(products, index) in category.facet_counts.facet_fields.service_full_name" :key="`${Math.floor(Math.random() * 20)}-${index}`"
 
                     :label="`${index}`"
                     color="purple"
-                  ></v-checkbox>
+                  ></v-checkbox> -->
                 </v-card-text>
               </v-card>
             </v-expansion-panel-content>
@@ -47,15 +32,108 @@
     </v-flex>
 
     <v-flex xs9>
-      <v-container grid-list-lg fluid>
-        <v-layout row wrap>
-          <v-flex
-            v-for="(services, i) in cloudcomputing"
-            :key="i"
-            xs4
+      <v-data-iterator
+        :items="initialSolrResults.response.docs"
+        :rows-per-page-items="rowsPerPageItems"
+        :pagination.sync="pagination"
+        content-tag="v-layout"
+        @update:pagination="updatePagination"
+        row
+        wrap
+      >
+        <template v-slot:item="props">
+          <!-- <v-container grid-list-lg fluid> -->
+            <!-- <v-layout row wrap> -->
+              <v-flex xs4>
+                <v-card style="margin-bottom: 20px;">
+                  <v-img
+                    src="https://cdn.iconscout.com/icon/free/png-256/amazon-26-225439.png"
+                    height="200px"
+                  >
+                  </v-img>
+
+                  <v-card-title primary-title>
+                    <div>
+                      <div class="headline">{{props.item.service_full_name}}</div>
+                      <span class="grey--text">{{props.item.description}}</span>
+                    </div>
+                  </v-card-title>
+                  <v-card-text>
+                    <p>Region: {{ props.item.region || 'Unknown' }}</p>
+                    <p>City: {{ props.item.city || 'Unknown' }}</p>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-btn flat>Share</v-btn>
+                    <v-btn flat color="purple">Explore</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn icon @click="props.item.id = !props.item.id">
+                      <v-icon>{{ props.item.id ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
+                    </v-btn>
+                  </v-card-actions>
+
+                  <v-slide-y-transition>
+                    <div v-show="!props.item.id" v-if="props.item.keywords.length > 0">
+                      <v-card-title><h3>Benefits</h3></v-card-title>
+                      <v-card-text>
+                      {{ props.item.benefits }}
+                    </v-card-text>
+                    </div>
+
+                  </v-slide-y-transition>
+                </v-card>
+              </v-flex>
+            <!-- </v-layout>
+          </v-container> -->
+
+          <!-- <v-flex
+            xs12
+            sm6
+            md4
+            lg3
           >
-            <v-card v-for="(product, index) in services.products"
-            :key="index" style="margin-bottom: 20px;">
+            <v-card>
+              <v-card-title><h4>{{ props.item.service_full_name }}</h4></v-card-title>
+              <v-divider></v-divider>
+              <v-list dense>
+                <v-list-tile>
+                  <v-list-tile-content>Calories:</v-list-tile-content>
+                  <v-list-tile-content class="align-end">{{ props.item.calories }}</v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>Fat:</v-list-tile-content>
+                  <v-list-tile-content class="align-end">{{ props.item.fat }}</v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>Carbs:</v-list-tile-content>
+                  <v-list-tile-content class="align-end">{{ props.item.carbs }}</v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>Protein:</v-list-tile-content>
+                  <v-list-tile-content class="align-end">{{ props.item.protein }}</v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>Sodium:</v-list-tile-content>
+                  <v-list-tile-content class="align-end">{{ props.item.sodium }}</v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>Calcium:</v-list-tile-content>
+                  <v-list-tile-content class="align-end">{{ props.item.calcium }}</v-list-tile-content>
+                </v-list-tile>
+                <v-list-tile>
+                  <v-list-tile-content>Iron:</v-list-tile-content>
+                  <v-list-tile-content class="align-end">{{ props.item.iron }}</v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-card>
+          </v-flex> -->
+
+        </template>
+      </v-data-iterator>
+      <!-- <v-container grid-list-lg fluid>
+        <v-layout row wrap>
+          <v-flex v-for="(product, index) in initialSolrResults.response.docs" :key="index"  xs4>
+            <v-card style="margin-bottom: 20px;">
               <v-img
                 src="https://cdn.iconscout.com/icon/free/png-256/amazon-26-225439.png"
                 height="200px"
@@ -64,30 +142,48 @@
 
               <v-card-title primary-title>
                 <div>
-                  <div class="headline">{{product.name}}</div>
+                  <div class="headline">{{product.service_full_name}}</div>
                   <span class="grey--text">{{product.description}}</span>
                 </div>
               </v-card-title>
+              <v-card-text>
+                <p>Region: {{ product.region || 'Unknown' }}</p>
+                <p>City: {{ product.city || 'Unknown' }}</p>
+              </v-card-text>
 
               <v-card-actions>
                 <v-btn flat>Share</v-btn>
                 <v-btn flat color="purple">Explore</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="product.id = !product.id">
-                  <v-icon>{{ product.id ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</v-icon>
+                  <v-icon>{{ product.id ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
                 </v-btn>
               </v-card-actions>
 
               <v-slide-y-transition>
-                <v-card-text v-show="product.id" v-if="product.otherInfo.length > 0">
-                  This is where we will display the pricing structure and other info
+                <div v-show="!product.id" v-if="product.keywords.length > 0">
+                  <v-card-title><h3>Benefits</h3></v-card-title>
+                  <v-card-text>
+                  {{ product.benefits }}
                 </v-card-text>
+                </div>
+
               </v-slide-y-transition>
             </v-card>
           </v-flex>
         </v-layout>
       </v-container>
+
+      <div class="text-xs-center">
+        <v-pagination
+          v-model="pagination.page"
+          :length="pages"
+          :value="`${pagination.page}`"
+        ></v-pagination>
+      </div> -->
+
     </v-flex>
+
   </v-layout>
 </v-container>
 </template>
@@ -100,114 +196,105 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      solr: {},
+      page: 0,
+      rowsPerPageItems: [4, 8, 12],
+      pagination: {
+        rowsPerPage: 20
+      },
+      da: [
+        {
+          name: 'Ice cream sandwich',
+          calories: 237,
+          fat: 9.0,
+          carbs: 37,
+          protein: 4.3,
+          sodium: 129,
+          calcium: '8%',
+          iron: '1%'
+        },
+        {
+          name: 'Frozen Yogurt',
+          calories: 159,
+          fat: 6.0,
+          carbs: 24,
+          protein: 4.0,
+          sodium: 87,
+          calcium: '14%',
+          iron: '1%'
+        }
+      ],
+      initialSolrResults: {},
       category: {},
-      newPayload: {},
-      facetCounts: 0,
+      // newPayload: {},
+      // facetCounts: 0,
       loadServices: false,
       showExtraContent: false,
       checkbox: true,
       panel: [],
       sideColumnItems: 10,
-      show: false,
-      cloudcomputing: [
-        {
-          name: 'PaaS',
-          products: [
-            {
-              id: 1,
-              name: 'AWS SZ',
-              description: 'What do i do ?',
-              otherInfo: ['dsadsadasaa', 'dsadaddsadads']
-            },
-            {
-              id: 2,
-              name: 'AWS WS',
-              description: 'What do i do ?',
-              otherInfo: []
-            },
-            {
-              id: 3,
-              name: 'AWS AA',
-              description: 'What do i do ?',
-              otherInfo: ['dsadsadassas']
-            }
-          ]
-        },
-        {
-          name: 'IaaS',
-          products: [
-            {
-              id: 1,
-              name: 'AWS What what',
-              description: 'What do i do ?',
-              otherInfo: ['Pricing']
-            },
-            {
-              id: 2,
-              name: 'GCP Compute',
-              description: 'What do i do ?',
-              otherInfo: []
-            }
-          ]
-        }
-      ]
-      // panel: [true, true, true, true],
+      show: false
     }
   },
 
   created () {
     this.expandColumns()
-    this.solrSearch()
+    this.initialSolrSearch()
+  },
+
+  computed: {
+    pages () {
+      return this.pagination.rowsPerPage ? Math.ceil(this.initialSolrResults.response.docs.length / this.pagination.rowsPerPage) : 0
+    }
   },
 
   methods: {
-    formatDate (date) {
-      return utils.formatDate(date)
-    },
-
-    solrSearch () {
+    updatePagination (pagination) {
+      console.log('update:pagination', pagination)
+      // if (pagination.page === 2) {
+      //   this.show = true
+      // }
       axios({
         method: 'get',
-        url: 'http://dev.csp.com:8983/solr/csp/select?q=*%3A*&facet=true&facet.field=category&facet.field=service_full_name&json.nl=map',
+        url: `http://dev.csp.com:3000/solr/query?page=${pagination.page}`,
+        // data: {page: pag}
         withCredentials: true
       })
         .then((response) => {
           const payload = response.data
+          // for (const doc in payload.response.docs) {
+          //   for (const cat in payload.facet_counts.facet_fields.category) {
+          //     if (cat === payload.response.docs[doc]['category']) {
+          //       payload.response.docs[doc]['facetCount'] = payload.facet_counts.facet_fields.category[cat]
+          //     }
+          //   }
+          // }
 
-          for (const doc in payload.response.docs) {
-            // console.log('>>> ', payload.response.docs[doc]['category'])
-
-            for (const cat in payload.facet_counts.facet_fields.category) {
-              if (cat === payload.response.docs[doc]['category']) {
-                // console.log('found!!!!', payload.facet_counts.facet_fields.category[cat])
-                payload.response.docs[doc]['facetCount'] = payload.facet_counts.facet_fields.category[cat]
-              }
-            }
-          }
-
-          this.solr = payload
-          console.log(this.solr)
+          this.initialSolrResults = payload
+          console.log('new paginations > ', this.initialSolrResults)
         })
         .catch((error) => {
           logger(`Error fetching data from Solr: ${error}`, 'error')
         })
     },
 
-    fetchCategoriesFromSolr (category, event) {
-      const cat = encodeURI(category)
+    initialSolrSearch () {
       axios({
         method: 'get',
-        url: `http://dev.csp.com:8983/solr/csp/select?q=${cat}&facet=true&facet.field=category&facet.field=service_full_name&json.nl=map&rows=200&facet.mincount=1`
-        // withCredentials: true
+        url: 'http://dev.csp.com:3000/solr/query?page=1',
+        withCredentials: true
       })
         .then((response) => {
           const payload = response.data
+          // for (const doc in payload.response.docs) {
+          //   for (const cat in payload.facet_counts.facet_fields.category) {
+          //     if (cat === payload.response.docs[doc]['category']) {
+          //       payload.response.docs[doc]['facetCount'] = payload.facet_counts.facet_fields.category[cat]
+          //     }
+          //   }
+          // }
 
-          this.category = payload
-          this.loadServices = true
-          if (event) event.preventDefault()
-          console.log('categorySolrSearch', this.category)
+          this.initialSolrResults = payload
+          console.log(this.initialSolrResults)
         })
         .catch((error) => {
           logger(`Error fetching data from Solr: ${error}`, 'error')
