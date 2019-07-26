@@ -89,7 +89,6 @@
 </template>
 
 <script>
-import * as utils from '../lib/utils'
 import logger from '../lib/logger'
 import axios from 'axios'
 
@@ -102,32 +101,7 @@ export default {
       pagination: {
         rowsPerPage: 10
       },
-      da: [
-        {
-          name: 'Ice cream sandwich',
-          calories: 237,
-          fat: 9.0,
-          carbs: 37,
-          protein: 4.3,
-          sodium: 129,
-          calcium: '8%',
-          iron: '1%'
-        },
-        {
-          name: 'Frozen Yogurt',
-          calories: 159,
-          fat: 6.0,
-          carbs: 24,
-          protein: 4.0,
-          sodium: 87,
-          calcium: '14%',
-          iron: '1%'
-        }
-      ],
       initialSolrResults: {},
-      category: {},
-      loadServices: false,
-      showExtraContent: false,
       checkbox: false,
       panel: [],
       sideColumnItems: 10,
@@ -159,22 +133,16 @@ export default {
           this.initialSolrResults = payload
           // this.pagination.page = pagination.page
           this.totalPages = payload.response.numFound / 10
-          // console.log('new paginations > ', this.initialSolrResults)
         })
         .catch((error) => {
           logger(`Error fetching data from Solr: ${error}`, 'error')
         })
     },
 
-    retrieveSpecificService (service_full_name) {
-      // if (service_full_name) {
-      //   this.checkbox = true
-      // }
-
-      console.log('Checkbox selected: ', service_full_name)
+    retrieveSpecificService (serviceFullName) {
       axios({
         method: 'get',
-        url: `http://dev.csp.com:3000/solr/query/service_full_name?service_full_name=${service_full_name}`,
+        url: `http://dev.csp.com:3000/solr/query/service_full_name?service_full_name=${serviceFullName}`,
         withCredentials: true
       })
         .then((response) => {
@@ -182,12 +150,6 @@ export default {
 
           this.initialSolrResults = payload
           console.log('>>>> ', this.initialSolrResults.response)
-
-          // for (const val in payload.facet_counts.facet_pivot) {
-          //   this.facets = payload.facet_counts.facet_pivot[val]
-          // }
-
-          // console.log('facets >> ', this.facets)
         })
         .catch((error) => {
           logger(`Error fetching data from Solr: ${error}`, 'error')
