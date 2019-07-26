@@ -7,21 +7,21 @@
           <v-expansion-panel
             v-model="panel"
             expand
-            v-if="initialSolrResults.facet_counts"
+            v-if="initialSolrResults"
           >
 
-            <v-expansion-panel-content v-for="(cat, i) in initialSolrResults.facet_counts.facet_fields.category" :key="`${i}`">
+            <v-expansion-panel-content v-for="(facet, i) in facets" :key="`${i}`">
               <template v-slot:header>
-                <div>{{`${i} (${cat})`}}</div>
+                <div>{{`${facet.value} (${facet.count})`}}</div>
               </template>
               <v-card>
                 <v-card-text class="lighten-3">
-                  <!-- <v-checkbox
-                    v-for="(products, index) in category.facet_counts.facet_fields.service_full_name" :key="`${Math.floor(Math.random() * 20)}-${index}`"
-
-                    :label="`${index}`"
-                    color="purple"
-                  ></v-checkbox> -->
+                  <v-checkbox
+                    v-for="(services, index) in facet.pivot" :key="`${Math.floor(Math.random() * 20)}-${index}`"
+                    :label="`${services.value}`"
+                    color="orange"
+                    @change="retrieveSpecificService(services.value)"
+                  ></v-checkbox>
                 </v-card-text>
               </v-card>
             </v-expansion-panel-content>
@@ -32,65 +32,8 @@
     </v-flex>
 
     <v-flex xs9>
-      <!-- <v-data-iterator
-        :items="initialSolrResults.response.docs"
-        :rows-per-page-items="rowsPerPageItems"
-        :pagination.sync="pagination"
-        content-tag="v-layout"
-        @update:pagination="updatePagination"
-        row
-        wrap
-      >
-        <template v-slot:item="props">
-          <v-container grid-list-lg fluid>
-            <v-layout row wrap>
-              <v-flex xs4>
-                <v-card style="margin-bottom: 20px;">
-                  <v-img
-                    src="https://cdn.iconscout.com/icon/free/png-256/amazon-26-225439.png"
-                    height="200px"
-                  >
-                  </v-img>
-
-                  <v-card-title primary-title>
-                    <div>
-                      <div class="headline">{{props.item.service_full_name}}</div>
-                      <span class="grey--text">{{props.item.description}}</span>
-                    </div>
-                  </v-card-title>
-                  <v-card-text>
-                    <p>Region: {{ props.item.region || 'Unknown' }}</p>
-                    <p>City: {{ props.item.city || 'Unknown' }}</p>
-                  </v-card-text>
-
-                  <v-card-actions>
-                    <v-btn flat>Share</v-btn>
-                    <v-btn flat color="purple">Explore</v-btn>
-                    <v-spacer></v-spacer>
-                    <v-btn icon @click="props.item.id = !props.item.id">
-                      <v-icon>{{ props.item.id ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-                    </v-btn>
-                  </v-card-actions>
-
-                  <v-slide-y-transition>
-                    <div v-show="!props.item.id" v-if="props.item.keywords.length > 0">
-                      <v-card-title><h3>Benefits</h3></v-card-title>
-                      <v-card-text>
-                      {{ props.item.benefits }}
-                    </v-card-text>
-                    </div>
-
-                  </v-slide-y-transition>
-                </v-card>
-              </v-flex>
-
-            </v-layout>
-          </v-container>
-        </template>
-      </v-data-iterator> -->
-
-            <v-container grid-list-lg fluid>
-        <v-layout row wrap>
+      <v-container grid-list-lg fluid>
+        <v-layout row wrap v-if="initialSolrResults.response">
           <v-flex v-for="(product, index) in initialSolrResults.response.docs" :key="index"  xs4>
             <v-card style="margin-bottom: 20px;">
               <v-img
@@ -101,7 +44,7 @@
 
               <v-card-title primary-title>
                 <div>
-                  <div class="headline">{{product.service_full_name}}</div>
+                  <div class="headline"><router-link :to="{ name: 'serviceDetail', params: { id: product.id } }">{{product.service_full_name}}</router-link></div>
                   <span class="grey--text">{{product.description}}</span>
                 </div>
               </v-card-title>
@@ -132,7 +75,7 @@
           </v-flex>
         </v-layout>
       </v-container>
-      
+
       <div class="text-xs-center">
         <v-pagination
           v-model="pagination.page"
@@ -153,11 +96,10 @@ import axios from 'axios'
 export default {
   data () {
     return {
-      // page: 0,
+      facets: {},
       totalPages: 0,
       rowsPerPageItems: [4, 8, 12],
       pagination: {
-        // page: 0,
         rowsPerPage: 10
       },
       da: [
@@ -186,7 +128,7 @@ export default {
       category: {},
       loadServices: false,
       showExtraContent: false,
-      checkbox: true,
+      checkbox: false,
       panel: [],
       sideColumnItems: 10,
       show: false
@@ -217,7 +159,35 @@ export default {
           this.initialSolrResults = payload
           // this.pagination.page = pagination.page
           this.totalPages = payload.response.numFound / 10
-          console.log('new paginations > ', this.initialSolrResults)
+          // console.log('new paginations > ', this.initialSolrResults)
+        })
+        .catch((error) => {
+          logger(`Error fetching data from Solr: ${error}`, 'error')
+        })
+    },
+
+    retrieveSpecificService (service_full_name) {
+      // if (service_full_name) {
+      //   this.checkbox = true
+      // }
+
+      console.log('Checkbox selected: ', service_full_name)
+      axios({
+        method: 'get',
+        url: `http://dev.csp.com:3000/solr/query/service_full_name?service_full_name=${service_full_name}`,
+        withCredentials: true
+      })
+        .then((response) => {
+          const payload = response.data
+
+          this.initialSolrResults = payload
+          console.log('>>>> ', this.initialSolrResults.response)
+
+          // for (const val in payload.facet_counts.facet_pivot) {
+          //   this.facets = payload.facet_counts.facet_pivot[val]
+          // }
+
+          // console.log('facets >> ', this.facets)
         })
         .catch((error) => {
           logger(`Error fetching data from Solr: ${error}`, 'error')
@@ -241,7 +211,10 @@ export default {
           // }
 
           this.initialSolrResults = payload
-          console.log(this.initialSolrResults)
+
+          for (const val in payload.facet_counts.facet_pivot) {
+            this.facets = payload.facet_counts.facet_pivot[val]
+          }
         })
         .catch((error) => {
           logger(`Error fetching data from Solr: ${error}`, 'error')
