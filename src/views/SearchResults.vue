@@ -33,12 +33,16 @@
 
     <v-flex xs9>
       <v-container grid-list-lg fluid>
+        <SearchBar />
+        <div class="mb-3"></div>
         <v-layout row wrap v-if="initialSolrResults.response">
-          <v-flex v-for="(product, index) in initialSolrResults.response.docs" :key="index"  xs4>
+          <v-flex v-for="(product, index) in initialSolrResults.response.docs" :key="index"  xs3>
             <v-card style="margin-bottom: 20px;">
               <v-img
-                src="https://cdn.iconscout.com/icon/free/png-256/amazon-26-225439.png"
-                height="200px"
+                :src="require('../assets/provider.svg')"
+                height="150px"
+                aspect-ratio="2"
+                contain
               >
               </v-img>
 
@@ -48,14 +52,10 @@
                   <span class="grey--text">{{product.description}}</span>
                 </div>
               </v-card-title>
-              <v-card-text>
-                <p>Region: {{ product.region || 'Unknown' }}</p>
-                <p>City: {{ product.city || 'Unknown' }}</p>
-              </v-card-text>
 
               <v-card-actions>
-                <v-btn flat>Share</v-btn>
-                <v-btn flat color="purple">Explore</v-btn>
+                <v-btn flat color="deep-orange">Share</v-btn>
+                <v-btn flat color="indigo">Explore</v-btn>
                 <v-spacer></v-spacer>
                 <v-btn icon @click="product.id = !product.id">
                   <v-icon>{{ product.id ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
@@ -92,25 +92,31 @@
 import logger from '../lib/logger'
 import axios from 'axios'
 
+import SearchBar from '@/components/SearchBar.vue'
+
 export default {
   data () {
     return {
       facets: {},
       totalPages: 0,
-      rowsPerPageItems: [4, 8, 12],
+      // rowsPerPageItems: [4, 8, 12],
       pagination: {
         rowsPerPage: 10
       },
       initialSolrResults: {},
       checkbox: false,
       panel: [],
-      sideColumnItems: 10,
+      sideColumnItems: 38,
       show: false
     }
   },
 
+  components: {
+    SearchBar
+  },
+
   created () {
-    this.expandColumns()
+    // this.expandColumns()
     this.initialSolrSearch()
   },
 
@@ -159,7 +165,7 @@ export default {
     initialSolrSearch () {
       axios({
         method: 'get',
-        url: 'http://dev.csp.com:3000/solr/query?page=1',
+        url: 'http://dev.csp.com:3000/solr/query?page=1&rows=10',
         withCredentials: true
       })
         .then((response) => {

@@ -3,6 +3,7 @@ import Router from 'vue-router'
 
 // Import the views here
 import Root from './views/Root'
+import Comparison from './views/Comparison'
 import SearchResults from './views/SearchResults'
 import ServiceDetail from './views/ServiceDetail'
 
@@ -24,6 +25,15 @@ export default new Router({
       component: SearchResults,
       meta: {
         title: 'Search Results'
+      }
+    },
+
+    {
+      name: 'comparison',
+      path: '/comparison',
+      component: Comparison,
+      meta: {
+        title: 'Cloud Service Comparison'
       }
     },
     {

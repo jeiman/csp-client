@@ -2,16 +2,35 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <span>CSP</span>&nbsp;
-        <span class="font-weight-light">Project</span>
+        <router-link :to="{name: 'root'}"><span>CSP</span>&nbsp;
+        <span class="font-weight-light">Project</span></router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
         flat
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        color="yellow darken-3"
+        href="https://aws.amazon.com/new/"
         target="_blank"
       >
-        <span class="mr-2">Latest Release</span>
+        <span class="mr-2">Latest AWS News</span>
+      </v-btn>
+
+      <v-btn
+        flat
+        color="light-blue darken-3"
+        href="https://cloud.google.com/blog/"
+        target="_blank"
+      >
+        <span class="mr-2">Latest GCP News</span>
+      </v-btn>
+
+      <v-btn
+        flat
+        color="green darken-2"
+        href="https://azure.microsoft.com/en-gb/blog/"
+        target="_blank"
+      >
+        <span class="mr-2">Latest Azure News</span>
       </v-btn>
     </v-toolbar>
 
@@ -45,7 +64,11 @@ export default {
 
 <style lang="scss">
 // @import 'vuetify/dist/vuetify.min.css';
+@import "./styles/style.scss";
 
+a {
+  text-decoration: none;
+}
 .slide-fade-enter-active {
   transition: all .4s ease;
 }

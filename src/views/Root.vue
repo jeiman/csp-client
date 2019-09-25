@@ -6,7 +6,7 @@
     >
       <v-flex xs12>
         <v-img
-          :src="require('../assets/logo.svg')"
+          :src="require('../assets/cloud-coding.svg')"
           class="my-3"
           contain
           height="200"
@@ -19,10 +19,11 @@
         </h1>
         <p class="subheading font-weight-regular">
           A tool to help you choose the right provider for your business needs
-          <!-- <br>please join our online
-          <a href="https://community.vuetifyjs.com" target="_blank">Discord Community</a> -->
         </p>
+        <v-btn color="indigo"><router-link :to="{ name: 'results' }">Search Results</router-link></v-btn>
+        <v-btn color="teal"><router-link :to="{ name: 'comparison' }">Cloud Service Comparison</router-link></v-btn>
       </v-flex>
+      <h2 class="headline font-weight-bold mb-3">What's next?</h2>
 
       <!-- <v-flex
         mb-5
@@ -142,6 +143,9 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+a {
+  color: #fff;
+  text-decoration: none;
+}
 </style>
