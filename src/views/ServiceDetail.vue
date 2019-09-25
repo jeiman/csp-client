@@ -4,8 +4,8 @@
     <v-flex xs12 sm6 offset-sm3>
       <v-card v-for="(item, i) in service" :key="i">
         <v-img
-          src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
-          aspect-ratio="2.75"
+          src="https://miro.medium.com/max/1200/1*N4ZpKOX8bxgUFOC4y7MWKQ.jpeg"
+          aspect-ratio="2.95"
         ></v-img>
 
         <v-card-title primary-title>
@@ -14,7 +14,7 @@
             <div class="mb-4 title"> {{ item.description }} </div>
             <div class="headline"><b>Provider:</b> {{ item.provider }}</div>
             <div class="headline"><b>Category:</b> {{ item.category }}</div>
-            <div class="headline"><b>Region:</b> {{ item.region }} &bull; <b>City:</b> {{ item.city }}</div>
+            <!-- <div class="headline"><b>Region:</b> {{ item.region }} &bull; <b>City:</b> {{ item.city }}</div> -->
             <v-divider class="my-3"></v-divider>
             <div class="my-3">
               <h1 class="display-1">Benefits</h1>
@@ -23,7 +23,7 @@
           </div>
         </v-card-title>
 
-        <v-card-text>
+        <!-- <v-card-text>
 
         <div class="my-3">
           <h1 class="display-1">Pricing Breakdown</h1>
@@ -42,7 +42,7 @@
             </tbody>
           </table>
         </div>
-        </v-card-text>
+        </v-card-text> -->
 
         <v-card-actions>
           <v-btn color="orange">Share</v-btn>
@@ -65,7 +65,7 @@
             >
               <v-card>
                 <v-img
-                  src="https://cdn.vuetifyjs.com/images/cards/desert.jpg"
+                  src="https://miro.medium.com/max/1200/1*N4ZpKOX8bxgUFOC4y7MWKQ.jpeg"
                   aspect-ratio="2.75"
                 ></v-img>
 
