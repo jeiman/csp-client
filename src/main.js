@@ -5,22 +5,11 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import VueResource from 'vue-resource'
-
-// import Raven from 'raven-js'
-// import RavenVue from 'raven-js/plugins/vue'
-
+import VueWait from 'vue-wait'
 import Notifications from 'vue-notification'
-
 import Multiselect from 'vue-multiselect'
 Vue.use(Notifications)
-
-// Raven
-//   .config('https://4bf45cb07e6c4f0183824c39df4caf87@sentry.io/1271183', {
-//     environment: process.env.NODE_ENV === 'development' ? 'development' : 'production'
-//   })
-//   .addPlugin(RavenVue, Vue)
-//   .install()
-
+Vue.use(VueWait)
 Vue.use(VueResource)
 Vue.component('multiselect', Multiselect)
 
@@ -42,5 +31,6 @@ Vue.component('footers', require('./components/Footer.vue'))
 new Vue({
   router,
   store,
+  wait: new VueWait(),
   render: h => h(App)
 }).$mount('#app')
