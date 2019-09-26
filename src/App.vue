@@ -2,8 +2,16 @@
   <v-app>
     <v-toolbar app>
       <v-toolbar-title class="headline text-uppercase">
-        <router-link :to="{name: 'root'}"><span>CSP</span>&nbsp;
-        <span class="font-weight-light">Project</span></router-link>
+        <router-link :to="{name: 'root'}">
+          <div>
+            <v-img
+            :src="require('./assets/cloud-coding.svg')"
+            contain
+            height="24"
+          ></v-img>
+          </div>
+          <div class="font-weight-light">CSP Project</div>
+        </router-link>
       </v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn

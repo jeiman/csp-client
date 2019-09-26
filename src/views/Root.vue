@@ -22,6 +22,8 @@
         </p>
         <v-btn color="indigo"><router-link :to="{ name: 'results' }">Search Results</router-link></v-btn>
         <v-btn color="teal"><router-link :to="{ name: 'comparison' }">Cloud Service Comparison</router-link></v-btn>
+        <div class="my-4"></div>
+        <v-btn color="yellow darken-3"><router-link :to="{ name: 'onboarding' }">Need help? Use the onboarding system</router-link></v-btn>
       </v-flex>
     </v-layout>
   </v-container>

@@ -4,6 +4,7 @@ import Router from 'vue-router'
 // Import the views here
 import Root from './views/Root'
 import Comparison from './views/Comparison'
+import Onboarding from './views/Onboarding'
 import SearchResults from './views/SearchResults'
 import ServiceDetail from './views/ServiceDetail'
 
@@ -27,7 +28,14 @@ export default new Router({
         title: 'Search Results'
       }
     },
-
+    {
+      name: 'onboarding',
+      path: '/onboarding',
+      component: Onboarding,
+      meta: {
+        title: 'Onboarding'
+      }
+    },
     {
       name: 'comparison',
       path: '/comparison',
