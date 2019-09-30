@@ -116,8 +116,11 @@
 <script>
 import logger from '../lib/logger'
 import axios from 'axios'
+import configFile from '../../config'
 
 import SearchBar from '@/components/SearchBar.vue'
+
+const apiUrl = process.env.NODE_ENV === 'development' ? configFile.dev.serviceUrl : configFile.build.serviceUrl
 
 export default {
   data () {
@@ -141,7 +144,6 @@ export default {
   },
 
   created () {
-    // this.expandColumns()
     this.initialSolrSearch()
   },
 
@@ -156,7 +158,7 @@ export default {
       console.log('update:pagination', pagination)
       axios({
         method: 'get',
-        url: `http://dev.csp.com:3000/solr/query?page=${pagination}`,
+        url: `${apiUrl}/solr/query?page=${pagination}`,
         withCredentials: true
       })
         .then((response) => {
@@ -173,7 +175,7 @@ export default {
     retrieveSpecificService (serviceFullName) {
       axios({
         method: 'get',
-        url: `http://dev.csp.com:3000/solr/query/service_full_name?service_full_name=${serviceFullName}`,
+        url: `${apiUrl}/solr/query/service_full_name?service_full_name=${serviceFullName}`,
         withCredentials: true
       })
         .then((response) => {
@@ -191,10 +193,8 @@ export default {
       this.$wait.start('my list is to load')
       console.log('loading....')
 
-      const axiosQuery = () => axios.get('http://dev.csp.com:3000/solr/query?page=1&rows=10')
+      const axiosQuery = () => axios.get(`${apiUrl}/solr/query?page=1&rows=10`)
       const { data } = await axiosQuery()
-
-      // setTimeout(() => this.initialSolrResults = data, 10000)
 
       this.initialSolrResults = data
 
@@ -203,33 +203,6 @@ export default {
       }
       console.log('end loading...')
       this.$wait.end('my list is to load')
-
-      // axios({
-      //   method: 'get',
-      //   url: 'http://dev.csp.com:3000/solr/query?page=1&rows=10',
-      //   withCredentials: true
-      // })
-      //   .then((response) => {
-      //     const payload = response.data
-      //     // for (const doc in payload.response.docs) {
-      //     //   for (const cat in payload.facet_counts.facet_fields.category) {
-      //     //     if (cat === payload.response.docs[doc]['category']) {
-      //     //       payload.response.docs[doc]['facetCount'] = payload.facet_counts.facet_fields.category[cat]
-      //     //     }
-      //     //   }
-      //     // }
-
-      //     // setTimeout(() => this.initialSolrResults = payload, 2000)
-      //     this.initialSolrResults = payload
-
-      //     for (const val in payload.facet_counts.facet_pivot) {
-      //       this.facets = payload.facet_counts.facet_pivot[val]
-      //     }
-      //   })
-      //   .catch((error) => {
-      //     logger(`Error fetching data from Solr: ${error}`, 'error')
-      //   })
-      //   this.$wait.end('my list is to load')
     },
 
     expandColumns () {
