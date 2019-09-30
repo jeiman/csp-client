@@ -6,7 +6,6 @@ xaron.xyz {
 api.xaron.xyz {
   # API load balancer
   proxy / 68.183.34.142:3001 {
-    websocket
-    transparent
+    # transparent
   }
 }
