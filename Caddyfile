@@ -5,7 +5,7 @@ xaron.xyz {
 
 api.xaron.xyz {
   # API load balancer
-  proxy / 68.183.34.142:3001 {
+  proxy / http://68.183.34.142:3001 {
     transparent
     header_upstream Host {host}
     header_upstream X-Real-IP {remote}
