@@ -8,7 +8,7 @@ module.exports = {
     }
   },
   build: {
-    serviceUrl: 'https://api.xane.dev',
+    serviceUrl: 'https://api.cloudtool.xyz',
     cookies: {
       secure: true
     }
