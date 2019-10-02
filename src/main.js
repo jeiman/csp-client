@@ -5,11 +5,9 @@ import router from './router'
 import store from './store'
 import './registerServiceWorker'
 import VueResource from 'vue-resource'
-import VueWait from 'vue-wait'
 import Notifications from 'vue-notification'
 import Multiselect from 'vue-multiselect'
 Vue.use(Notifications)
-Vue.use(VueWait)
 Vue.use(VueResource)
 Vue.component('multiselect', Multiselect)
 
@@ -31,6 +29,5 @@ Vue.component('footers', require('./components/Footer.vue'))
 new Vue({
   router,
   store,
-  wait: new VueWait(),
   render: h => h(App)
 }).$mount('#app')

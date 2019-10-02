@@ -1,25 +1,4 @@
 <template>
-<v-wait for="my list is to load">
-  <template slot="waiting">
-    <v-container>
-      <v-card
-        class="d-flex justify-center mb-3"
-        color="grey lighten-2"
-        flat
-        tile
-      >
-        <v-card
-          class="pa-5"
-          dense
-          tile
-        >
-          <div style="text-align:center;" class="display-1">
-            <i class="fas fa-2x fa-circle-notch fa-spin"></i> Loading the services...
-          </div>
-        </v-card>
-      </v-card>
-    </v-container>
-  </template>
   <v-container>
     <v-layout pa-3 mb-2>
       <v-flex xs3 mr-2>
@@ -108,9 +87,7 @@
         </div>
       </v-flex>
     </v-layout>
-    </v-container>
-  </v-wait>
-
+  </v-container>
 </template>
 
 <script>
@@ -190,7 +167,6 @@ export default {
     },
 
     async initialSolrSearch () {
-      this.$wait.start('my list is to load')
       console.log('loading....')
 
       const axiosQuery = () => axios.get(`${apiUrl}/solr/query?page=1&rows=10`)
@@ -202,7 +178,6 @@ export default {
         this.facets = data.facet_counts.facet_pivot[val]
       }
       console.log('end loading...')
-      this.$wait.end('my list is to load')
     },
 
     expandColumns () {
