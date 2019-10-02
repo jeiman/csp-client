@@ -64,7 +64,7 @@
                   </v-btn>
                 </v-card-actions>
 
-                <v-slide-y-transition>
+                <!-- <v-slide-y-transition>
                   <div v-show="!product.id" v-if="product.keywords.length > 0">
                     <v-card-title><h3>Benefits</h3></v-card-title>
                     <v-card-text>
@@ -72,7 +72,7 @@
                   </v-card-text>
                   </div>
 
-                </v-slide-y-transition>
+                </v-slide-y-transition> -->
               </v-card>
             </v-flex>
           </v-layout>
@@ -126,7 +126,9 @@ export default {
 
   computed: {
     pages () {
-      return this.pagination.rowsPerPage ? Math.ceil(this.initialSolrResults.response.numFound / this.pagination.rowsPerPage) : 0
+      if (this.initialSolrResults !== undefined) {
+        return this.pagination.rowsPerPage ? Math.ceil(this.initialSolrResults.response.numFound / this.pagination.rowsPerPage) : 0
+      }
     }
   },
 
@@ -140,9 +142,12 @@ export default {
       })
         .then((response) => {
           const payload = response.data
-          this.initialSolrResults = payload
+
+          if (payload !== undefined) {
+            this.initialSolrResults = payload
+            this.totalPages = payload.response.numFound / 10
+          }
           // this.pagination.page = pagination.page
-          this.totalPages = payload.response.numFound / 10
         })
         .catch((error) => {
           logger(`Error fetching data from Solr: ${error}`, 'error')
@@ -173,6 +178,7 @@ export default {
       const { data } = await axiosQuery()
 
       this.initialSolrResults = data
+      console.log(this.initialSolrResults)
 
       for (const val in data.facet_counts.facet_pivot) {
         this.facets = data.facet_counts.facet_pivot[val]
@@ -182,13 +188,13 @@ export default {
 
     expandColumns () {
       this.panel = [...Array(this.sideColumnItems).keys()].map(_ => true)
-    },
-
-    resultsCount () {
-      return this.profiles.filter((value, index, array) => {
-        return value.public === true
-      }).length
     }
+
+    // resultsCount () {
+    //   return this.profiles.filter((value, index, array) => {
+    //     return value.public === true
+    //   }).length
+    // }
   }
 }
 </script>
