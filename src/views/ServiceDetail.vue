@@ -115,6 +115,10 @@
 <script>
 import axios from 'axios'
 import logger from '../lib/logger'
+import configFile from '../../config'
+
+const apiUrl = process.env.NODE_ENV === 'development' ? configFile.dev.serviceUrl : configFile.build.serviceUrl
+
 export default {
   name: 'serviceDetail',
   data () {
@@ -133,7 +137,7 @@ export default {
     fetch () {
       axios({
         method: 'get',
-        url: `http://dev.csp.com:3000/solr/query/id?id=${this.$route.params.id}`,
+        url: `${apiUrl}/solr/query/id?id=${this.$route.params.id}`,
         withCredentials: true
       })
         .then((response) => {
