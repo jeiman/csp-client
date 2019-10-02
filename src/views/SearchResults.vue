@@ -34,12 +34,10 @@
       <v-flex xs9>
         <v-container grid-list-lg fluid>
           <SearchBar />
-
           <div class="mb-3"></div>
-          <button @click="initialSolrSearch">Load list again.</button>
           <v-layout row wrap v-if="initialSolrResults.response">
             <v-flex v-for="(product, index) in initialSolrResults.response.docs" :key="index"  xs3>
-              <v-card style="margin-bottom: 20px;">
+              <v-card class="py-3">
                 <v-img
                   :src="require('../assets/provider.svg')"
                   height="150px"
@@ -57,11 +55,11 @@
 
                 <v-card-actions>
                   <v-btn flat color="deep-orange">Share</v-btn>
-                  <v-btn flat color="indigo">Explore</v-btn>
+                  <v-btn flat color="indigo"><router-link :to="{ name: 'serviceDetail', params: { id: product.id } }">Explore</router-link></v-btn>
                   <v-spacer></v-spacer>
-                  <v-btn icon @click="product.id = !product.id">
+                  <!-- <v-btn icon @click="product.id = !product.id">
                     <v-icon>{{ product.id ? 'keyboard_arrow_down' : 'keyboard_arrow_up' }}</v-icon>
-                  </v-btn>
+                  </v-btn> -->
                 </v-card-actions>
 
                 <!-- <v-slide-y-transition>
@@ -172,18 +170,14 @@ export default {
     },
 
     async initialSolrSearch () {
-      console.log('loading....')
-
       const axiosQuery = () => axios.get(`${apiUrl}/solr/query?page=1&rows=10`)
       const { data } = await axiosQuery()
 
       this.initialSolrResults = data
-      console.log(this.initialSolrResults)
 
       for (const val in data.facet_counts.facet_pivot) {
         this.facets = data.facet_counts.facet_pivot[val]
       }
-      console.log('end loading...')
     },
 
     expandColumns () {
